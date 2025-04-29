@@ -5,9 +5,13 @@ style:
   joke_rate: 0.2
   vague_rate: 0.1
 intervention:
+  enabled: true
   base_prob: 0.02
   silence_threshold: 5
-  interval_minutes: 10
+  interval_minutes: 60
+  channels:
+    - "1353687394401910797"
+    - "1364622450918424576"
 memory:
   match_threshold: 0.7
 bot:

@@ -16,15 +16,25 @@ export class InitiationService {
   }
 
   start() {
+    if (!this.cfg.intervention?.enabled) {
+      console.log('InitiationService: disabled by config.');
+      return;
+    }
     if (this.timer) clearInterval(this.timer);
     this.timer = setInterval(() => this.tick().catch(console.error), this.interval);
     console.log(`InitiationService: every ${this.interval / 60000} min`);
   }
 
   private async tick() {
-    const chans = this.client.channels.cache.filter(
+    if (!this.cfg.intervention?.enabled) return;
+    let chans = this.client.channels.cache.filter(
       (c): c is TextChannel => c.isTextBased() && c.type === 0
     );
+    // channels指定があればそのIDのみ対象
+    const channelIds = this.cfg.intervention?.channels;
+    if (Array.isArray(channelIds) && channelIds.length > 0) {
+      chans = chans.filter(c => channelIds.includes(c.id));
+    }
     const candidates = [...chans.values()].sort(() => Math.random() - 0.5);
 
     for (const ch of candidates) {
