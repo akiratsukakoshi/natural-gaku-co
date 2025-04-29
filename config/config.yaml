@@ -12,6 +12,9 @@ intervention:
   channels:
     - "1353687394401910797"
     - "1364622450918424576"
+  active_hours:
+    start: 8
+    end: 23
 memory:
   match_threshold: 0.7
 bot:

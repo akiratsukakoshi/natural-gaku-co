@@ -27,6 +27,16 @@ export class InitiationService {
 
   private async tick() {
     if (!this.cfg.intervention?.enabled) return;
+    // 稼働時間帯チェック
+    const now = new Date();
+    const hour = now.getHours();
+    const activeHours = this.cfg.intervention?.active_hours;
+    if (activeHours) {
+      if (hour < activeHours.start || hour >= activeHours.end) {
+        // 稼働時間外なら何もしない
+        return;
+      }
+    }
     let chans = this.client.channels.cache.filter(
       (c): c is TextChannel => c.isTextBased() && c.type === 0
     );
@@ -53,9 +63,18 @@ export class InitiationService {
 
   private async buildVars() {
     const profs = this.profiles.all();
-    const user = profs[Math.floor(Math.random() * profs.length)] ?? { username: 'みなさん' };
+    const user = profs[Math.floor(Math.random() * profs.length)] ?? { username: 'みなさん', tags: [] };
     const name = user.callname || user.username || 'みなさん';
     const mem = await this.mem.search(user.username, 1);
-    return { user: name, topic: mem[0]?.content ?? '最近の話題' };
+
+    let topic: string;
+    if (mem[0]?.content) {
+      topic = mem[0].content;
+    } else if (user.tags && user.tags.length > 0) {
+      topic = user.tags[Math.floor(Math.random() * user.tags.length)];
+    } else {
+      topic = '最近の話題';
+    }
+    return { user: name, topic };
   }
 } 
