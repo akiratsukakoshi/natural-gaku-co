@@ -7,6 +7,7 @@ style:
 intervention:
   base_prob: 0.02
   silence_threshold: 5
+  interval_minutes: 10
 memory:
   match_threshold: 0.7
 bot:
@@ -16,10 +17,8 @@ bot:
     - がっこちゃん
     - がっ子
     - がっ子ちゃん
-initiation:
-  interval_minutes: 10
-  base_prob: 0.02
-  silence_threshold: 5
+  bot_loop_limit: 3
+  bot_loop_reset_minutes: 60
 etl:
   export_path: ./data/logs
   schedule: "0 18 * * *" 

@@ -9,4 +9,7 @@ export class ProfileStore {
   get(id: string) {
     return this.mem.get(id);
   }
+  all() {
+    return this.mem.values();
+  }
 } 
