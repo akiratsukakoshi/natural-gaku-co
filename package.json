@@ -1,0 +1,38 @@
+{
+  "name": "natural-gaku-co",
+  "version": "1.0.0",
+  "description": "Discord AI エージェント – 要件v1.1/サンプルv1.2 skeleton",
+  "main": "dist/bot.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/bot.js",
+    "dev": "ts-node-dev --respawn src/bot.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint src/**/*.ts"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.38.0",
+    "discord.js": "^14.14.1",
+    "dotenv": "^16.3.1",
+    "js-yaml": "^4.1.0",
+    "mustache": "^4.2.0",
+    "openai": "^4.24.1",
+    "winston": "^3.11.0"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "@types/mustache": "^4.2.5",
+    "@types/node": "^18.19.3",
+    "@typescript-eslint/eslint-plugin": "^6.13.2",
+    "@typescript-eslint/parser": "^6.13.2",
+    "eslint": "^8.55.0",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.3.2",
+    "vitest": "^0.34.6"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

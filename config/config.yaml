@@ -1,0 +1,25 @@
+llm:
+  model: gpt-3.5-turbo
+  temperature: 0.8
+style:
+  joke_rate: 0.2
+  vague_rate: 0.1
+intervention:
+  base_prob: 0.02
+  silence_threshold: 5
+memory:
+  match_threshold: 0.7
+bot:
+  ignoreBots: false
+  trigger_words:
+    - がっこ
+    - がっこちゃん
+    - がっ子
+    - がっ子ちゃん
+initiation:
+  interval_minutes: 10
+  base_prob: 0.02
+  silence_threshold: 5
+etl:
+  export_path: ./data/logs
+  schedule: "0 18 * * *" 
