@@ -42,9 +42,10 @@ export class InitiationService {
   }
 
   private async buildVars() {
-    const profs = Array.from(this.profiles.all());
+    const profs = this.profiles.all();
     const user = profs[Math.floor(Math.random() * profs.length)] ?? { username: 'みなさん' };
+    const name = user.callname || user.username || 'みなさん';
     const mem = await this.mem.search(user.username, 1);
-    return { user: user.username, topic: mem[0]?.content ?? '最近の話題' };
+    return { user: name, topic: mem[0]?.content ?? '最近の話題' };
   }
 } 

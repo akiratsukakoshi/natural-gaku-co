@@ -31,4 +31,5 @@ build/
 *.swp
 
 # その他
-coverage/ 
+coverage/
+config/members.yaml 

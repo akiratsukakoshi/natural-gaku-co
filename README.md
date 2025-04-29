@@ -54,7 +54,12 @@ cp .env.example .env
 
 - `config/config.yaml` … LLMモデル・温度・確率・Bot設定など
 - `config/prompts.yaml` … LLM用プロンプト
-- `config/members.yaml` … 参加者プロファイル
+- `config/members.yaml` … 参加者プロファイル（初回は `config/members.example.yaml` をコピーして作成してください）
+
+```bash
+cp config/members.example.yaml config/members.yaml
+# members.yaml を編集
+```
 
 4. **ビルド・起動**
 

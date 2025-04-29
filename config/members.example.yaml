@@ -1,0 +1,7 @@
+members:
+  - id: "1234567890"
+    username: sample_user
+    callname: サンプル
+  - id: "0987654321"
+    username: another_user
+    callname: テスト 

@@ -10,6 +10,6 @@ export class ProfileStore {
     return this.mem.get(id);
   }
   all() {
-    return this.mem.values();
+    return Array.from(this.mem.values());
   }
 } 
