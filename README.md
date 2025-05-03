@@ -168,4 +168,22 @@ bot:
 - `ignoreBots: true` に設定すると、他Botの発言自体に反応しなくなり、ループ防止機能は動作しません。
 - Bot同士のやり取りを楽しみつつ、無限ループを防ぎたい場合は `ignoreBots: false` とし、上記パラメータを調整してください。
 
+---
+
+## 環境変数例
+
+.env で管理する主な値:
+
+```
+DISCORD_BOT_TOKEN=...
+OPENAI_API_KEY=...
+SUPABASE_URL=...
+SUPABASE_SERVICE_ROLE=...
+INITIATION_CHANNEL_IDS=1353687394401910797,1364622450918424576 # initiationServiceで投げかけを行うチャンネルID（カンマ区切り）
+```
+
+- `INITIATION_CHANNEL_IDS` は **主体的投げかけ（initiationService）専用** のチャンネルIDリストです。
+- 通常のBot応答は全チャンネルで行われます。
+- チャンネルIDをgit管理したくない場合は、config.yamlのchannelsは空配列にし、.envで管理してください。
+
 --- 

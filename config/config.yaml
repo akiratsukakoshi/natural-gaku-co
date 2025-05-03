@@ -8,10 +8,8 @@ intervention:
   enabled: true
   base_prob: 0.02
   silence_threshold: 5
-  interval_minutes: 60
-  channels:
-    - "1353687394401910797"
-    - "1364622450918424576"
+  interval_minutes: 15
+  channels: [] # initiationService専用。通常は.envのINITIATION_CHANNEL_IDSで上書き推奨
   active_hours:
     start: 8
     end: 23
