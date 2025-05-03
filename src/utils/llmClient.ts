@@ -1,3 +1,9 @@
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+import dotenv from 'dotenv';
+dotenv.config({ path: `${__dirname}/../../.env` });
 import fs from 'fs';
 import yaml from 'js-yaml';
 import Mustache from 'mustache';
