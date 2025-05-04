@@ -6,4 +6,9 @@ members:
   - id: "0987654321"
     username: another_user
     callname: テスト 
-    tags: ["音楽", "旅行", "映画"] 
+    tags: ["音楽", "旅行", "映画"]
+  - id: "2222222222"
+    username: some_bot
+    callname: ボットくん
+    isBot: true
+    tags: [] 

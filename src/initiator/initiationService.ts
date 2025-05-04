@@ -62,7 +62,7 @@ export class InitiationService {
   }
 
   private async buildVars() {
-    const profs = this.profiles.all();
+    const profs = this.profiles.all().filter(p => !p.isBot);
     const user = profs[Math.floor(Math.random() * profs.length)] ?? { username: 'みなさん', tags: [] };
     const name = user.callname || user.username || 'みなさん';
     const mem = await this.mem.search(user.username, 1);

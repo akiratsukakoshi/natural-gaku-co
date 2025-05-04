@@ -186,4 +186,32 @@ INITIATION_CHANNEL_IDS=1353687394401910797,1364622450918424576 # initiationServi
 - 通常のBot応答は全チャンネルで行われます。
 - チャンネルIDをgit管理したくない場合は、config.yamlのchannelsは空配列にし、.envで管理してください。
 
+---
+
+## 参加者YAML管理とBotの扱い
+
+- `config/members.yaml` には人間ユーザーだけでなくBotも追加できます。
+- **Botを追加する場合は、各Botエントリに `isBot: true` を付与してください。**
+- 人間ユーザーには `isBot` を書かなくてOKです（未記載＝人間として扱われます）。
+- 例：
+
+```yaml
+members:
+  - id: "1234567890"
+    username: taro
+    callname: たろう
+    tags: ["音楽", "旅行"]
+  - id: "2222222222"
+    username: some_bot
+    callname: ボットくん
+    isBot: true
+    tags: []
+```
+
+### Initiation（主体的投げかけ）でBotを除外
+
+- Initiation（静かなときの話題投げかけ）機能では、`isBot: true` のエントリは自動的に除外されます。
+- そのため、Botをmembers.yamlに追加しても、Initiationの声がけ対象は人間ユーザーのみとなります。
+- 通常の応答やプロファイル参照にはBotも利用できます。
+
 --- 
