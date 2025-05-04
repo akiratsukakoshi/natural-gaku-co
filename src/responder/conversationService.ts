@@ -54,9 +54,9 @@ export class ConversationService {
     return this.shortMem.filter(x => x.text && x.author && x.author === chanId).length;
   }
   private applyVariation(text: string, _prof?: any) {
-    if (Math.random() < this.cfg.style.joke_rate) {
-      return text + '\n\n（ところで冗談だけど…）';
-    }
+    // if (Math.random() < this.cfg.style.joke_rate) {
+    //   return text + '\n\n（ところで冗談だけど…）';
+    // }
     if (Math.random() < this.cfg.style.vague_rate) {
       return text.replace(/。$/u, 'かも。');
     }
