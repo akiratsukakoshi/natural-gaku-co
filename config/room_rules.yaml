@@ -1,0 +1,16 @@
+rules:
+  - id: silent_without_nomination
+    description: >
+      他者から指名・メンションされない限り発言しない。
+  - id: facilitator_priority
+    description: >
+      ファシリテーター(ガクチョ)の指示を最優先せよ。
+  - id: turn_passing_rule
+    description: >
+      自分の発言の最後に必ず YOWAI, がっこちゃん, ボッチー, 私 の誰かを指名。
+
+bots:
+  - name: がっこちゃん
+  - name: ガッコちゃん
+  - name: がっこ
+facilitator: ガクチョ 

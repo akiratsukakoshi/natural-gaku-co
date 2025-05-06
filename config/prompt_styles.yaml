@@ -1,0 +1,21 @@
+styles:
+  short_positive_reaction:
+    description: >
+      シンプルかつ肯定的。アイディア共有・ニュース報告向け。
+    examples:
+      - "昨日こんな記事を読んだよ"
+      - "新しいアイデアが浮かんだ！"
+
+  deep_analysis:
+    description: >
+      背景の構造や影響を掘り下げて論じる。
+    examples:
+      - "SNS疲れが社会に与える影響って？"
+      - "働くとは何か、考えている。"
+
+  empathetic_human:
+    description: >
+      感情に寄り添い、共感を示す。
+    examples:
+      - "最近ちょっとつらいな"
+      - "気持ちが落ち込む" 

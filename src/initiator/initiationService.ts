@@ -1,7 +1,15 @@
 import { Client, TextChannel } from 'discord.js';
 import { MemoryStore } from '../memory/memoryStore.js';
-import { renderPrompt, callLLM } from '../utils/llmClient.js';
 import { ProfileStore } from '../context/profileStore.js';
+import fs from 'fs';
+import yaml from 'js-yaml';
+import Mustache from 'mustache';
+import OpenAI from 'openai';
+
+const charYaml = yaml.load(fs.readFileSync('config/character.yaml', 'utf8')) as any;
+const charPrompt = charYaml.character.persona;
+const systemPromptTemplate = fs.readFileSync('config/system_prompts/initiation.md', 'utf8');
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 export class InitiationService {
   private timer: NodeJS.Timeout | null = null;
@@ -16,13 +24,8 @@ export class InitiationService {
   }
 
   start() {
-    if (!this.cfg.intervention?.enabled) {
-      console.log('InitiationService: disabled by config.');
-      return;
-    }
     if (this.timer) clearInterval(this.timer);
-    this.timer = setInterval(() => this.tick().catch(console.error), this.interval);
-    console.log(`InitiationService: every ${this.interval / 60000} min`);
+    this.timer = setInterval(() => this.tick(), this.interval);
   }
 
   private async tick() {
@@ -54,7 +57,16 @@ export class InitiationService {
       if (Math.random() > this.cfg.intervention.base_prob) continue;
 
       const promptVars = await this.buildVars();
-      const text = await callLLM(renderPrompt('initiation', promptVars), this.cfg.llm);
+      const systemPrompt = charPrompt + '\n' + Mustache.render(systemPromptTemplate, promptVars);
+      const res = await openai.chat.completions.create({
+        model: this.cfg.llm.model,
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: '' },
+        ],
+        temperature: this.cfg.llm.temperature
+      });
+      const text = res.choices[0].message.content?.trim() ?? '';
       await ch.send(text);
       console.log(`Initiation → #${ch.name}`);
       break;

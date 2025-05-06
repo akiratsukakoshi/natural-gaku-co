@@ -6,9 +6,9 @@ style:
   vague_rate: 0.1
 intervention:
   enabled: true
-  base_prob: 0.1
+  base_prob: 0.05
   silence_threshold: 5
-  interval_minutes: 60
+  interval_minutes: 100
   channels: [] # initiationService専用。通常は.envのINITIATION_CHANNEL_IDSで上書き推奨
   active_hours:
     start: 8

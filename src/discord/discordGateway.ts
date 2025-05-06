@@ -1,13 +1,20 @@
 import { Client, GatewayIntentBits, Events, Message, TextChannel, NewsChannel, ThreadChannel } from 'discord.js';
-import { ConversationService } from '../responder/conversationService';
+import { decideAndClassify } from '../decisionAndStyle.js';
+import { generateContextualReply } from '../responseGenerator.js';
+import { MemoryStore } from '../memory/memoryStore.js';
+import { ProfileStore } from '../context/profileStore.js';
 
 export const makeDiscordGateway = (
-  cfg: any,
-  convo: ConversationService
+  cfg: any
 ) => {
   const client = new Client({
     intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent]
   });
+
+  // 会話履歴（短期）をチャンネルごとに管理
+  const recentMessagesMap = new Map<string, { author: string; text: string }[]>();
+  const memoryStore = new MemoryStore(cfg);
+  const profileStore = new ProfileStore();
 
   client.once(Events.ClientReady, () =>
     console.log(`Logged in as ${client.user?.tag}`)
@@ -24,7 +31,6 @@ export const makeDiscordGateway = (
 
   client.on(Events.MessageCreate, async (m: Message) => {
     if (m.author.id === client.user?.id) return;
-    // 他Botの発言はignoreBotsで制御
     if (m.author.bot && cfg.bot.ignoreBots) return;
 
     const now = Date.now();
@@ -81,8 +87,29 @@ export const makeDiscordGateway = (
       botLoopCounter.set(channelId, botState);
     }
 
-    if (!(await convo.shouldRespond(m))) return;
-    const reply = await convo.buildReply(m);
+    // Step-0: 返答要否＋スタイル分類
+    const { should_respond, selected_style, reason } = await decideAndClassify(m.content, {
+      mentions: m.mentions.users.map(u => u.username),
+      reply_to_id: m.reference?.messageId,
+      user_id: m.author.id,
+      username: m.author.username
+    });
+    console.log(`[decision] should_respond=${should_respond} reason=${reason}`);
+    if (!should_respond) return;
+
+    // 会話履歴の管理
+    const recent = recentMessagesMap.get(channelId) || [];
+    recent.push({ author: m.author.username, text: m.content });
+    if (recent.length > 20) recent.shift();
+    recentMessagesMap.set(channelId, recent);
+
+    // Step-2: 応答生成（文脈・記憶・プロファイル活用）
+    const reply = await generateContextualReply(selected_style || 'short_positive_reaction', m, {
+      memoryStore,
+      profileStore,
+      recentMessages: recent,
+      cfg
+    });
     if (reply) await m.reply(reply);
   });
 
