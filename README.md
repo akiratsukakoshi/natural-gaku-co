@@ -132,7 +132,7 @@ rules:
 
 bots:
   - name: がっこちゃん
-  - name: ボッチー
+  - name: ガッコちゃん
 facilitator: ガクチョ
 ```
 - **rules**: ルームの会話ルール（id＋descriptionで自由に追加可）
