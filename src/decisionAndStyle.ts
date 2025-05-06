@@ -2,16 +2,22 @@ import fs from 'fs';
 import dotenv from 'dotenv';
 dotenv.config({ path: `${process.cwd()}/.env` });
 import OpenAI from 'openai';
+import yaml from 'js-yaml';
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 const styleYaml = fs.readFileSync('config/prompt_styles.yaml','utf8');
 const ruleYaml  = fs.readFileSync('config/room_rules.yaml', 'utf8');
+const rulesObj = yaml.load(ruleYaml) as any;
+const rulesText = Array.isArray(rulesObj.rules)
+  ? rulesObj.rules.map((r: any) => `- ${r.id}: ${r.description}` + (r.examples ? '\n    例: ' + r.examples.join(' / ') : '')).join('\n')
+  : '';
 
 export async function decideAndClassify(message: string, options: {
   mentions?: string[],
   reply_to_id?: string,
   user_id?: string,
-  username?: string
+  username?: string,
+  is_bot?: boolean
 } = {}) {
   // 追加情報をプロンプトに含める
   const mentionsText = Array.isArray(options.mentions) && options.mentions.length > 0
@@ -19,12 +25,13 @@ export async function decideAndClassify(message: string, options: {
   const replyToText = (typeof options.reply_to_id === 'string' && options.reply_to_id.length > 0)
     ? `\n# reply_to_id: ${options.reply_to_id}` : '';
   const userText = typeof options.username === 'string' && options.username.length > 0 ? `\n# 発言者: ${options.username}` : '';
+  const isBotText = options.is_bot ? '\n# 発話者はBotです' : '';
 
   const prompt = `
 あなたは Discord の会話モデレーター AI です。
 
 # ユーザー発言:
-${message}${userText}${mentionsText}${replyToText}
+${message}${userText}${mentionsText}${replyToText}${isBotText}
 
 # ルームルール (YAML):
 ${ruleYaml}
@@ -33,17 +40,9 @@ ${ruleYaml}
 ${styleYaml}
 
 ▼ 判断基準
-- silent_without_nomination: 指名・メンション・質問文がなければ should_respond=false
-- 指名（「がっこちゃん、」等）・メンション・reply・疑問文（「？」で終わる等）があれば should_respond=true
+${rulesText}
 - should_respond=true の場合は最適な selected_style を選ぶ
 - 迷った場合は安全側（should_respond=false）で停止
-
-▼ 例
-- 「がっこちゃんって便利！」→ should_respond=false
-- 「がっこちゃん、これどう思う？」→ should_respond=true, 適切なstyle
-- 「SNSが社会に与える影響についてどう思う？」→ should_respond=true, deep_analysis
-- 「新しいブログ書いたよ！」→ should_respond=true, short_positive_reaction
-- 「ここ数日ちょっとメンタル落ちてる」→ should_respond=true, empathetic_human
 
 出力は JSON:
 {

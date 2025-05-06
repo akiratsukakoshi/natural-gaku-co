@@ -92,7 +92,8 @@ export const makeDiscordGateway = (
       mentions: m.mentions.users.map(u => u.username),
       reply_to_id: m.reference?.messageId,
       user_id: m.author.id,
-      username: m.author.username
+      username: m.author.username,
+      is_bot: m.author.bot
     });
     console.log(`[decision] should_respond=${should_respond} reason=${reason}`);
     if (!should_respond) return;

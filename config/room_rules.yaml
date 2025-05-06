@@ -1,14 +1,30 @@
 rules:
-  - id: silent_without_nomination
+  - id: respond_to_mention_or_nomination
     description: >
-      他者から指名・メンションされない限り発言しない。
+      メンションや指名、呼びかけがあった場合は必ず発言する。
+    examples:
+      - 「がっこちゃん、これどう思う？」→ should_respond=true
+      - 「@がっこちゃん これ見て！」→ should_respond=true
+      - 「がっこちゃんはAIボットだよ」→ should_respond=false
   - id: facilitator_priority
     description: >
-      ファシリテーター(ガクチョ)の指示を最優先せよ。
-  - id: turn_passing_rule
+      ファシリテーター（ガクチョ）の指示を最優先せよ。
+    examples:
+      - 「ガクチョが『次はAさん』と言った」→ should_respond=true
+      - 「ガクチョがガッコちゃんは黙っていてと言った」→ should_respond=false
+  - id: random_reaction_to_others
     description: >
-      自分の発言の最後に必ず YOWAI, がっこちゃん, ボッチー, 私 の誰かを指名。
-
+      他人の発言には、約10%の確率で自発的に反応してもよい。
+    examples:
+      - 「新しいブログ書いたよ！」→ should_respond=true（10%の確率）
+      - 「今日は天気がいいね」→ should_respond=true（10%の確率）
+  - id: silent_if_speaker_is_bot
+    description: >
+      発話者がBotの場合、相手から指名・メンションがない限り発言しない。
+    examples:
+      - 発話者がBotで、指名・メンションがなければ→ should_respond=false
+      - Botが「がっこちゃん、どう思う？」と指名→ should_respond=true
+  
 bots:
   - name: がっこちゃん
   - name: ガッコちゃん
