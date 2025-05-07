@@ -2,25 +2,29 @@ rules:
   - id: respond_to_mention_or_nomination
     description: >
       メンションや指名、呼びかけがあった場合は必ず発言する。
+    priority: 50
     examples:
       - 「がっこちゃん、これどう思う？」→ should_respond=true
       - 「@がっこちゃん これ見て！」→ should_respond=true
-      - 「がっこちゃんはAIボットだよ」→ should_respond=false
+      - 「がっこちゃんに質問！」→ should_respond=true
   - id: facilitator_priority
     description: >
       ファシリテーター（ガクチョ）の指示を最優先せよ。
+    priority: 50
     examples:
       - 「ガクチョが『次はAさん』と言った」→ should_respond=true
-      - 「ガクチョがガッコちゃんは黙っていてと言った」→ should_respond=false
+      - 「ガクチョの指示があれば従う」→ should_respond=true
   - id: random_reaction_to_others
     description: >
       他人の発言には、約10%の確率で自発的に反応してもよい。
+    priority: 50
     examples:
       - 「新しいブログ書いたよ！」→ should_respond=true（10%の確率）
       - 「今日は天気がいいね」→ should_respond=true（10%の確率）
   - id: silent_if_speaker_is_bot
     description: >
       発話者がBotの場合、相手から指名・メンションがない限り発言しない。
+    priority: 100
     examples:
       - 発話者がBotで、指名・メンションがなければ→ should_respond=false
       - Botが「がっこちゃん、どう思う？」と指名→ should_respond=true

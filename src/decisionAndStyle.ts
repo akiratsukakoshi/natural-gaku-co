@@ -8,9 +8,13 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 const styleYaml = fs.readFileSync('config/prompt_styles.yaml','utf8');
 const ruleYaml  = fs.readFileSync('config/room_rules.yaml', 'utf8');
 const rulesObj = yaml.load(ruleYaml) as any;
-const rulesText = Array.isArray(rulesObj.rules)
-  ? rulesObj.rules.map((r: any) => `- ${r.id}: ${r.description}` + (r.examples ? '\n    例: ' + r.examples.join(' / ') : '')).join('\n')
-  : '';
+const rules = Array.isArray(rulesObj.rules) ? rulesObj.rules : [];
+const rulesText = rules
+  .map((r: any) => `- ${r.id}: ${r.description}` + (r.examples ? '\n    例: ' + r.examples.join(' / ') : ''))
+  .join('\n');
+const maxPriority = Math.max(...rules.map((r: any) => r.priority || 0));
+const strictRules = rules.filter((r: any) => r.priority === maxPriority);
+const strictRuleText = strictRules.map((r: any) => `【最重要】${r.id}: ${r.description}（このルールは絶対に守ること。他のルールや文脈よりも優先する）`).join('\n');
 
 export async function decideAndClassify(message: string, options: {
   mentions?: string[],
@@ -43,6 +47,8 @@ ${styleYaml}
 ${rulesText}
 - should_respond=true の場合は最適な selected_style を選ぶ
 - 迷った場合は安全側（should_respond=false）で停止
+
+${strictRuleText}
 
 出力は JSON:
 {
